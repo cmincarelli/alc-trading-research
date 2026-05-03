@@ -12,7 +12,7 @@ export function parseEntry(id: string): ReportEntry {
   const parts = normalized.split('/');
   // parts: [ticker, date, "reports", reportName]
   return {
-    ticker: parts[0],
+    ticker: parts[0].toUpperCase(), // glob loader lowercases ids in Astro 6
     date: parts[1],
     reportName: parts[3],
   };
