@@ -1,0 +1,49 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import { parseEntry, humanize } from '../../../lib/reports';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('reports');
+  return entries.map(entry => {
+    const { ticker, date, reportName } = parseEntry(entry.id);
+    return {
+      params: { ticker, date, report: reportName },
+      props: { entry },
+    };
+  });
+}
+
+interface Props {
+  entry: CollectionEntry<'reports'>;
+}
+
+const { ticker, date, report } = Astro.params;
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Base title={`${humanize(report)} — ${ticker}`}>
+  <main class="container" style="padding-top: 2.5rem;">
+    <nav class="breadcrumb">
+      <a href="/">Home</a>
+      <span class="breadcrumb__sep">→</span>
+      <a href={`/${ticker}/${date}/`}>{ticker} — {date}</a>
+      <span class="breadcrumb__sep">→</span>
+      <span>{humanize(report)}</span>
+    </nav>
+
+    <article class="article">
+      <h1 class="article__headline">{humanize(report)}</h1>
+      <p class="article__meta">{ticker} · {date}</p>
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">Trading Research</div>
+  </footer>
+</Base>
