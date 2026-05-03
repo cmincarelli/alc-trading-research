@@ -1,17 +1,52 @@
 ---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { parseEntry } from '../lib/reports';
 
+const entries = await getCollection('reports');
+
+// Group by ticker → collect unique dates
+const tickerMap = new Map<string, Set<string>>();
+for (const entry of entries) {
+  const { ticker, date } = parseEntry(entry.id);
+  if (!tickerMap.has(ticker)) tickerMap.set(ticker, new Set());
+  tickerMap.get(ticker)!.add(date);
+}
+
+const tickers = [...tickerMap.entries()]
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([ticker, dates]) => ({
+    ticker,
+    dates: [...dates].sort((a, b) => b.localeCompare(a)), // newest first
+  }));
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base title="Trading Research">
+  <header class="masthead">
+    <div class="container">
+      <h1 class="masthead__title">Trading Research</h1>
+      <p class="masthead__subtitle">Analysis &amp; Reports</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="ticker-grid">
+      {tickers.map(({ ticker, dates }) => (
+        <div class="ticker-card">
+          <div class="ticker-card__symbol">{ticker}</div>
+          <ul class="ticker-card__dates">
+            {dates.map(date => (
+              <li>
+                <a href={`/${ticker}/${date}/`}>{date}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">Trading Research</div>
+  </footer>
+</Base>
