@@ -1,43 +1,80 @@
-# Astro Starter Kit: Minimal
+# Trading Reports Viewer
 
-```sh
-npm create astro@latest -- --template minimal
+A static site for browsing AI-generated trading analysis reports. Built with Astro 6, styled in a New Yorker editorial aesthetic. Deployed to Netlify on push to main.
+
+## Overview
+
+Reports are sourced from `~/.tradingagents/logs/` and organised as:
+
+```
+logs/
+  [TICKER]/
+    [DATE]/
+      reports/
+        investment_plan.md
+        fundamentals_report.md
+        market_report.md
+        news_report.md
+        sentiment_report.md
+        final_trade_decision.md    (when present)
+        trader_investment_plan.md  (when present)
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+The site generates three levels of pages:
 
-## 🚀 Project Structure
+- `/` — index of all tickers, each as a card with report dates linked
+- `/[TICKER]/[DATE]/` — table of contents for one analysis run
+- `/[TICKER]/[DATE]/[report]/` — full styled article for an individual report
 
-Inside of your Astro project, you'll see the following folders and files:
+## Commands
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+| Command           | Action                                                  |
+| :---------------- | :------------------------------------------------------ |
+| `npm run sync`    | Copy latest reports from `~/.tradingagents/logs/`       |
+| `npm run dev`     | Start local dev server at `localhost:4321`              |
+| `npm run build`   | Build static site to `./dist/`                          |
+| `npm run preview` | Preview the production build locally                    |
+| `npm test`        | Run unit tests (Vitest)                                 |
+
+## Publishing new reports
+
+```bash
+npm run sync
+git add src/content/reports/
+git commit -m "update reports"
+git push
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Netlify deploys automatically on push to `main`.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Project structure
 
-Any static assets, like images, can be placed in the `public/` directory.
+```
+reports/
+  scripts/
+    sync-reports.sh       # rsync from ~/.tradingagents/logs/
+  src/
+    content/
+      reports/            # synced report markdown (committed to git)
+    content.config.ts     # Astro Content Collection definition
+    lib/
+      reports.ts          # parseEntry() and humanize() helpers
+      reports.test.ts     # Vitest unit tests
+    layouts/
+      Base.astro          # HTML shell with Google Fonts and global CSS
+    pages/
+      index.astro
+      [ticker]/[date]/
+        index.astro
+        [report].astro
+    styles/
+      global.css          # New Yorker typography and layout
+  netlify.toml
+```
 
-## 🧞 Commands
+## Tech stack
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- [Astro 6](https://astro.build) — static site generator
+- [Playfair Display](https://fonts.google.com/specimen/Playfair+Display) — editorial heading font
+- [Vitest](https://vitest.dev) — unit testing
+- [Netlify](https://netlify.com) — hosting
