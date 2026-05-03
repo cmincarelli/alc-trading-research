@@ -1,0 +1,256 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-bg: #faf8f4;
+  --color-text: #1a1a1a;
+  --color-muted: #666;
+  --color-rule: #1a1a1a;
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: Georgia, 'Times New Roman', serif;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* ── Masthead ─────────────────────────────────────── */
+.masthead {
+  text-align: center;
+  padding: 3rem 2rem 2rem;
+  border-bottom: 1px solid var(--color-rule);
+  margin-bottom: 3rem;
+}
+
+.masthead__title {
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.masthead__subtitle {
+  font-size: 0.8125rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-top: 0.5rem;
+}
+
+/* ── Ticker grid ──────────────────────────────────── */
+.ticker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  padding-bottom: 4rem;
+}
+
+.ticker-card {
+  border: 1px solid var(--color-rule);
+  padding: 1.5rem;
+}
+
+.ticker-card__symbol {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  border-bottom: 1px solid var(--color-rule);
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.ticker-card__dates {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.ticker-card__dates a {
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 0.9375rem;
+}
+
+.ticker-card__dates a:hover {
+  text-decoration: underline;
+}
+
+/* ── Breadcrumb ───────────────────────────────────── */
+.breadcrumb {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-rule);
+}
+
+.breadcrumb a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb__sep {
+  margin: 0 0.5rem;
+}
+
+/* ── Section header (date index) ─────────────────── */
+.section-header {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-rule);
+}
+
+.section-header__ticker {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.section-header__date {
+  font-size: 0.8125rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-top: 0.5rem;
+}
+
+/* ── Report TOC ───────────────────────────────────── */
+.report-toc {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 4rem;
+}
+
+.report-toc__item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.report-toc__number {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  min-width: 1.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.report-toc__link {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.report-toc__link:hover {
+  text-decoration: underline;
+}
+
+/* ── Article ──────────────────────────────────────── */
+.article {
+  max-width: 70ch;
+  margin: 0 auto;
+  padding-bottom: 5rem;
+}
+
+.article__headline {
+  font-family: var(--font-heading);
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+}
+
+.article__meta {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-rule);
+  margin-bottom: 2rem;
+}
+
+/* ── Prose (markdown body) ────────────────────────── */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-family: var(--font-heading);
+  line-height: 1.25;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose h1 { font-size: 1.75rem; }
+.prose h2 { font-size: 1.5rem; }
+.prose h3 { font-size: 1.25rem; }
+.prose h4 { font-size: 1.125rem; }
+
+.prose p { margin-bottom: 1.25rem; }
+
+.prose ul,
+.prose ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.75rem;
+}
+
+.prose li { margin-bottom: 0.375rem; }
+
+.prose strong { font-weight: 700; }
+.prose em    { font-style: italic; }
+
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--color-rule);
+  margin: 2rem 0;
+}
+
+.prose blockquote {
+  border-left: 2px solid var(--color-rule);
+  padding-left: 1rem;
+  color: #444;
+  font-style: italic;
+  margin: 1.5rem 0;
+}
+
+.prose a {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+/* ── Footer ───────────────────────────────────────── */
+.site-footer {
+  text-align: center;
+  padding: 2rem;
+  border-top: 1px solid var(--color-rule);
+  font-size: 0.6875rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-top: 4rem;
+}
