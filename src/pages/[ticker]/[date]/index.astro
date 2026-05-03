@@ -1,0 +1,70 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import { parseEntry, humanize } from '../../../lib/reports';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('reports');
+
+  // Group by "TICKER__DATE" (double underscore avoids splitting on ticker chars)
+  const groups = new Map<string, CollectionEntry<'reports'>[]>();
+  for (const entry of entries) {
+    const { ticker, date } = parseEntry(entry.id);
+    const key = `${ticker}__${date}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)!.push(entry);
+  }
+
+  return [...groups.entries()].map(([key, groupEntries]) => {
+    const sep = key.indexOf('__');
+    const ticker = key.slice(0, sep);
+    const date = key.slice(sep + 2);
+    return {
+      params: { ticker, date },
+      props: { entries: groupEntries },
+    };
+  });
+}
+
+interface Props {
+  entries: CollectionEntry<'reports'>[];
+}
+
+const { ticker, date } = Astro.params;
+const { entries } = Astro.props;
+
+const reports = entries
+  .map(e => ({ name: parseEntry(e.id).reportName }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+---
+
+<Base title={`${ticker} — ${date}`}>
+  <main class="container" style="padding-top: 2.5rem;">
+    <nav class="breadcrumb">
+      <a href="/">Home</a>
+      <span class="breadcrumb__sep">→</span>
+      <span>{ticker} — {date}</span>
+    </nav>
+
+    <div class="section-header">
+      <h1 class="section-header__ticker">{ticker}</h1>
+      <p class="section-header__date">{date}</p>
+    </div>
+
+    <ol class="report-toc">
+      {reports.map((r, i) => (
+        <li class="report-toc__item">
+          <span class="report-toc__number">{String(i + 1).padStart(2, '0')}</span>
+          <a class="report-toc__link" href={`/${ticker}/${date}/${r.name}/`}>
+            {humanize(r.name)}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">Trading Research</div>
+  </footer>
+</Base>
